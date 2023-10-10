@@ -1,5 +1,5 @@
 # Java command parser
-
+A small library parsing the input parameters specified when launching the application.
 ## Types of parameters
 * Flag:
 ```sh
