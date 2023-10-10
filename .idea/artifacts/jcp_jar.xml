@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="jcp:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/jcp_jar</output-path>
+    <root id="archive" name="jcp.jar">
+      <element id="module-output" name="CommandParser" />
+    </root>
+  </artifact>
+</component>
