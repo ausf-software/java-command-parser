@@ -13,7 +13,7 @@ A small library parsing the input parameters specified when launching the applic
 ```java
 ArrayList<CommandToken> ttokens = null;
 try {
-    ttokens = TerminalParser.parse(args);
+    ttokens = CommandParser.parse(args);
 } catch (Exception e) {
     e.printStackTrace();
 }
