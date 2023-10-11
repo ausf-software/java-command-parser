@@ -12,7 +12,7 @@ package io.github.ausf_software.jcp;
  * @since 1.0
  * @version 1.0
  */
-public class UnregisteredParameterType extends Exception {
+public class UnregisteredParameterTypeException extends Exception {
     /**
      * Constructs a {@code UnregisteredParameterType} with the specified
      * detail message.
@@ -20,7 +20,7 @@ public class UnregisteredParameterType extends Exception {
      * @param arg the text of the intended parameter.
      * @param pos position
      */
-    public UnregisteredParameterType(String arg, int pos) {
+    public UnregisteredParameterTypeException(String arg, int pos) {
         super(arg + ", pos: " + pos);
     }
 }

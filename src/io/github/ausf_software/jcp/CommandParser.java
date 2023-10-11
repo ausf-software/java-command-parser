@@ -18,11 +18,23 @@ import java.util.Properties;
  *
  * @author  Shcherbina Daniil
  * @since 1.0
- * @version 2.0
+ * @version 1.1
  */
 public class CommandParser {
 
-    public static ArrayList<CommandToken> parse(String[] args) throws Exception {
+    /**
+     * Parses tokens from a given array of strings in the following format:
+     * <ul>
+     *      <li>--flag</li>
+     *      <li>-parameterName parameterText</li>
+     * </ul>
+     *
+     * @param args array of strings containing parameters for the operation of the application
+     * @return returns a list of tokens with the found parameters
+     * @throws UnregisteredParameterTypeException If a token is found that does not match the
+     * form of the record
+     */
+    public static ArrayList<CommandToken> parse(String[] args) throws UnregisteredParameterTypeException {
         ArrayList<CommandToken> temp = new ArrayList<>();
         for (int i = 0; i < args.length; i++) {
             if (args[i].charAt(1) == '-') {
@@ -32,19 +44,44 @@ public class CommandParser {
                     temp.add(new CommandToken(args[i].substring(1), args[i + 1]));
                     i++;
                 } else {
-                    throw new UnregisteredParameterType(args[i], i);
+                    throw new UnregisteredParameterTypeException(args[i], i);
                 }
             }
         }
         return temp;
     }
 
+    /**
+     * Parses tokens from a given array of strings in accordance with the rules
+     * specified in a separate 'properties' file.
+     *
+     * @param args array of strings containing parameters for the
+     *             operation of the application
+     * @param rulePath the path to the 'properties' file containing
+     *                 custom parameters for defining tokens
+     * @return returns a list of tokens with the found parameters
+     * @throws UnregisteredParameterTypeException If a token is found that does not match the
+     * form of the record
+     * @throws IOException If it does not find a file containing custom parameters for determining
+     * tokens
+     * @throws FileMissingParameterException if all the parameters for custom token definition are
+     * missing in the file
+     */
     public static ArrayList<CommandToken> parse(String[] args, String rulePath)
-            throws IOException, UnregisteredParameterType {
+            throws IOException, UnregisteredParameterTypeException, FileMissingParameterException {
         ArrayList<CommandToken> temp = new ArrayList<>();
         File rules = new File(rulePath);
         Properties properties = new Properties();
         properties.load(new FileReader(rules));
+
+        if (!properties.contains("flagOperator") ||
+                !properties.contains("commandOperator") ||
+                !properties.contains("checkParametersFromMap") ||
+                !properties.contains("checkFlagsFromMap") ||
+                !properties.contains("flagMap") ||
+                !properties.contains("parameterMap")) {
+            throw new FileMissingParameterException();
+        }
 
         String flagPref = properties.getProperty("flagOperator");
         String paramPref = properties.getProperty("commandOperator");
@@ -70,7 +107,7 @@ public class CommandParser {
                 continue;
             }
 
-            throw new UnregisteredParameterType(args[i], i);
+            throw new UnregisteredParameterTypeException(args[i], i);
         }
         return temp;
     }
